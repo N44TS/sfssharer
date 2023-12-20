@@ -93,6 +93,12 @@ function App() {
   return (
     <div>
       <h1>Prediction Contract Interface</h1>
+      <h3>
+        Correclty Predict the floor price of the Milady nft collection by the
+        end of the week, the closest to the price wins a share of the contract
+        sharing fees
+      </h3>
+      <p>Current prize pot:</p>
       {account && <p>Connected Account: {account}</p>}
 
       <div>
