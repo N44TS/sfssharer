@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "./utils/abi.json";
+import "./App.css";
 
 const contractAddress = "0x459d998241FA8C9FC71fbeed228c3CA4c4e2a055";
 
@@ -11,6 +12,7 @@ function App() {
   const [prediction, setPrediction] = useState("");
   const [winningNumber, setWinningNumber] = useState("");
   const [sfsFeeAmount, setSfsFeeAmount] = useState("");
+  const [isWinner, setIsWinner] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -39,7 +41,19 @@ function App() {
     };
 
     init();
-  }, []);
+    checkIfWinner(); // Call the function to check if the user is a winner
+  }, [account, contract]); // Depend on account and contract
+
+  const checkIfWinner = async () => {
+    if (contract && account) {
+      try {
+        const position = await contract.winnerPosition(account);
+        setIsWinner(position > 0); // Set isWinner to true if the user's position is greater than 0
+      } catch (error) {
+        console.error("Error checking winner status:", error);
+      }
+    }
+  };
 
   const checkIfAdmin = async (userAccount) => {
     try {
@@ -91,52 +105,64 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>Prediction Contract Interface</h1>
-      <h3>
-        Correclty Predict the floor price of the Milady nft collection by the
-        end of the week, the closest to the price wins a share of the contract
-        sharing fees
-      </h3>
-      <p>Current prize pot:</p>
-      {account && <p>Connected Account: {account}</p>}
+    <div className="app-container">
+      <h1 className="header">GumbleDapp</h1>
+      <h2 className="description">
+        Predict the Milady NFT floor price - win rewards!
+      </h2>
+      <h4>
+        rules: cloest to actual price after 2 weeks wins a share of the contract
+        fees(SFS)! . The more people interact with this contract, the more Eth
+        to be won!
+      </h4>
 
-      <div>
+      {/* Prediction Input */}
+      <div className="section">
         <input
           type="number"
           value={prediction}
+          className="input-field"
           onChange={(e) => setPrediction(e.target.value)}
           placeholder="Your Prediction"
         />
-        <button onClick={submitPrediction}>Submit Prediction</button>
+        <button onClick={submitPrediction} className="button">
+          Submit
+        </button>
       </div>
 
-      <div>
-        <button onClick={claimReward}>Claim Reward</button>
-      </div>
+      {/* Claim Reward */}
+      {isWinner && (
+        <div className="section">
+          <button onClick={claimReward} className="button">
+            Claim Reward
+          </button>
+        </div>
+      )}
 
+      {/* Admin Panel */}
       {isAdmin && (
-        <>
-          <div>
-            <input
-              type="number"
-              value={winningNumber}
-              onChange={(e) => setWinningNumber(e.target.value)}
-              placeholder="Winning Number"
-            />
-            <button onClick={setWinningNum}>Set Winning Number</button>
-          </div>
-
-          <div>
-            <input
-              type="number"
-              value={sfsFeeAmount}
-              onChange={(e) => setSfsFeeAmount(e.target.value)}
-              placeholder="SFS Fee Amount"
-            />
-            <button onClick={claimSFSFees}>Claim SFS Fees</button>
-          </div>
-        </>
+        <div className="section">
+          <input
+            type="number"
+            value={winningNumber}
+            className="input-field"
+            onChange={(e) => setWinningNumber(e.target.value)}
+            placeholder="Set Winning Number"
+          />
+          <button onClick={setWinningNum} className="button">
+            Set Winning Number
+          </button>
+          <input
+            type="number"
+            value={sfsFeeAmount}
+            className="input-field"
+            onChange={(e) => setSfsFeeAmount(e.target.value)}
+            placeholder="SFS Fee Amount"
+          />
+          <button onClick={claimSFSFees} className="button">
+            Claim SFS Fees
+          </button>
+        </div>
       )}
     </div>
   );
