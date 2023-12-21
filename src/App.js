@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "./utils/abi.json";
 import "./App.css";
+import CountdownTimer from "./CountdownTimer";
 
 const contractAddress = "0x459d998241FA8C9FC71fbeed228c3CA4c4e2a055";
 
@@ -13,6 +14,9 @@ function App() {
   const [winningNumber, setWinningNumber] = useState("");
   const [sfsFeeAmount, setSfsFeeAmount] = useState("");
   const [isWinner, setIsWinner] = useState(false);
+  const [showRegistrationStatus, setShowRegistrationStatus] = useState(false);
+  const [isContractRegistered, setIsContractRegistered] = useState(null);
+  const [showWinningAnimation, setShowWinningAnimation] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: "00",
     hours: "00",
@@ -20,8 +24,7 @@ function App() {
   });
 
   // Temporary variable for development (set to 'true' to simulate being a winner)
-  const [isTempWinner, setIsTempWinner] = useState(false); // Change to true to test winner view
-
+  // const [isTempWinner, setIsTempWinner] = useState(false); // Change to true to test winner view
 
   useEffect(() => {
     const init = async () => {
@@ -39,8 +42,12 @@ function App() {
         try {
           const userAccount = await signer.getAddress();
           setAccount(userAccount);
+          console.log(
+            "Hey babes, come here often?... looks around the console...passes you a red wine..."
+          );
           const adminAddress = await contractInstance.admin();
-          setIsAdmin(adminAddress.toLowerCase() === userAccount.toLowerCase());
+          setIsAdmin(adminAddress.toLowerCase() === userAccount.toLowerCase()); // Check if the logged-in user is admin
+          checkIfWinner(userAccount); // Check if the logged-in user is a winner
         } catch (error) {
           console.error("Error during initialization:", error);
         }
@@ -50,14 +57,16 @@ function App() {
     };
 
     init();
-    checkIfWinner(); // Call the function to check if the user is a winner
+    checkIfWinner();
   }, [account, contract]); // Depend on account and contract
 
   const checkIfWinner = async () => {
     if (contract && account) {
       try {
         const position = await contract.winnerPosition(account);
-        setIsWinner(position > 0); // Set isWinner to true if the user's position is greater than 0
+        const isWinnerNow = position > 0;
+        setIsWinner(isWinnerNow);
+        setShowWinningAnimation(isWinnerNow); // Trigger the animation if the user is a winner
       } catch (error) {
         console.error("Error checking winner status:", error);
       }
@@ -88,6 +97,7 @@ function App() {
     try {
       await contract.claimReward();
       console.log("Reward claimed");
+      setShowWinningAnimation(false); // Hide the winning animation after claiming
     } catch (error) {
       console.error("Error claiming reward:", error);
     }
@@ -104,7 +114,11 @@ function App() {
   };
 
   const claimSFSFees = async () => {
-    if (!sfsFeeAmount) return;
+    const amount = parseFloat(sfsFeeAmount); // Convert string to a floating-point number
+    if (isNaN(amount) || amount <= 0) {
+      console.error("Invalid SFS fee amount.");
+      return; // Exit the function if the amount is not a valid number or less than or equal to zero
+    }
     try {
       await contract.claimSFSFees(sfsFeeAmount);
       console.log(`SFS fees claimed: ${sfsFeeAmount}`);
@@ -113,37 +127,74 @@ function App() {
     }
   };
 
-  // Temporary!!! function to toggle winner status (for development)
-  const toggleWinnerStatus = () => {
-    setIsTempWinner(!isTempWinner);
+  const checkContractRegistration = async () => {
+    try {
+      const [isRegistered, balanceBlock] =
+        await contract.checkRegistrationAndBalanceBlock();
+      setIsContractRegistered(isRegistered);
+      setShowRegistrationStatus(true);
+      // Optionally, you can also handle balanceBlock if needed
+    } catch (error) {
+      console.error("Error checking contract registration:", error);
+    }
   };
 
-  // Handle claim reward // STILL NEEDS DOING!!
-  // const handleClaimReward = () => {
-  //   // Add logic to claim the reward
-  //   console.log("Reward claimed");
-  //   setShowWinningAnimation(false); // Hide animation after claiming
-  // };
-
+  ////////////////////////////////
+  ////////BRING IN THE RETURN////////////////
+  ////////////////////////////////
   return (
     <div className="app-container">
-      {/* Temporary!!! button to toggle winner status */}
-    <button onClick={toggleWinnerStatus}>Toggle Winner Status (Dev)</button>
-           {/* {isWinner && (
-            <section className="claim-reward">
-              <button onClick={claimReward} className="claim-button">
-                Claim Your Reward
+      {/* Admin panel stuff */}
+      {isAdmin && (
+        <section className="admin-panel">
+          <h2>Admin Panel</h2>
+          <div className="admin-item">
+            <label>Contract Registered?:</label>
+            {!showRegistrationStatus && (
+              <button onClick={checkContractRegistration}>
+                Click to Check
               </button>
-            </section>
-          )} */}
-       {/* Check if user is a winner */}
-       {isTempWinner && (
-       <div className="winning-animation">
-       <div className="winning-message">You Won!
-       <p>yes, srsly....</p>
-       <button onClick={claimReward} className="claim-button">get my money</button>
-    </div>
-     </div>
+            )}
+            {showRegistrationStatus && (
+              <p>{isContractRegistered ? "Yes! Woohoo" : "No :( wtf"}</p>
+            )}
+          </div>
+          <div className="admin-item">
+            <label>Set Winning Number:</label>
+            <input
+              type="number"
+              value={winningNumber}
+              onChange={(e) => setWinningNumber(e.target.value)}
+            />
+            <button onClick={setWinningNum}>Submit Winning Number</button>
+          </div>
+          <div className="admin-item">
+            <label>Claim SFS Fees:</label>
+            <input
+              type="number"
+              value={sfsFeeAmount}
+              onChange={(e) => setSfsFeeAmount(e.target.value)}
+            />
+            <button onClick={claimSFSFees}>Send Fees to Contract</button>
+          </div>
+        </section>
+      )}
+
+      {/* Temporary!!! button to toggle winner status when devving
+      <button onClick={toggleWinnerStatus}>Toggle Winner Status (Dev)</button> */}
+      {isWinner && (
+        <div className="winning-animation">
+          <div className="winning-message">
+            You Won!
+            <p>yes, srsly....</p>
+            <button onClick={claimReward} className="claim-button">
+              get my money
+            </button>
+          </div>
+        </div>
+      )}
+      {isWinner && showWinningAnimation && (
+        <div className="winning-animation"></div>
       )}
 
       <div className="wallet-address">
@@ -157,13 +208,7 @@ function App() {
       <div className="gamble-box">
         <header className="app-header">
           <h1 className="app-title">Gumbledapp</h1>
-          <div className="countdown-timer">
-            <p>Time left to play</p>
-            <span className="timer-days">00</span>d :
-            <span className="timer-hours">00</span>h :
-            <span className="timer-minutes">00</span>m
-          </div>
-          {isAdmin && <div className="admin-button">Admin</div>}
+          <CountdownTimer />
         </header>
 
         <main className="main-content">
@@ -182,24 +227,19 @@ function App() {
               </button>
             </div>
             {/* *pay gas only */}
-          </div> 
-
-          {isAdmin && (
-            <section className="admin-panel">
-              {/* Admin panel inputs and buttons */}
-            </section>
-          )}
+          </div>
         </main>
       </div>
 
       <div className="rules-section">
         <div className="rules">
           <h3 className="rules-title">
-            Rules: closest to actual price after 2 weeks wins a share of the
-            contract fees(SFS)! . The more people interact with this contract,
-            the more Eth to be won!
+            <span style={{ color: "#FF2E63", fontSize: "1.2em" }}>Rules:</span>{" "}
+            closest to actual price after two weeks wins a share of the contract
+            fees(SFS)! . The more people interact with this contract, the more
+            Eth to be won!
           </h3>
-          {/* Rules text here */}
+          You can submit as many times as you like, *just costs gas.
         </div>
       </div>
     </div>
