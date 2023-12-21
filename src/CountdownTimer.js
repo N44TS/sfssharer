@@ -38,12 +38,12 @@ function CountdownTimer() {
   }, []);
 
   return (
-    <div className="countdown-timer">
+    <div>
       <p>Time left to play</p>
       <span className="timer-days">{timeLeft.days}</span>d:
       <span className="timer-hours">{timeLeft.hours}</span>h:
       <span className="timer-minutes">{timeLeft.minutes}</span>m:
-      <span className="timer-seconds">{timeLeft.seconds}</span>s:  
+      <span className="timer-seconds">{timeLeft.seconds}</span>s:
     </div>
   );
 }

@@ -18,8 +18,10 @@ function App() {
   const [showRegistrationStatus, setShowRegistrationStatus] = useState(false);
   const [isContractRegistered, setIsContractRegistered] = useState(null);
   const [showWinningAnimation, setShowWinningAnimation] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Add state to track submission status
-  const [hasSubmitted, setHasSubmitted] = useState(false); // Track if the user has submitted once
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [sfsTokenId, setSfsTokenId] = useState(null);
+  const [isModeNetwork, setIsModeNetwork] = useState(false);
 
   // Temporary variable for development (set to 'true' to simulate being a winner)
   // const [isTempWinner, setIsTempWinner] = useState(false); // Change to true to test winner view
@@ -37,7 +39,6 @@ function App() {
 
         setContract(contractInstance);
 
-        // Inside the init function, after setting the contract instance
         try {
           const userAccount = await signer.getAddress();
           setAccount(userAccount);
@@ -47,13 +48,22 @@ function App() {
           const adminAddress = await contractInstance.admin();
           setIsAdmin(adminAddress.toLowerCase() === userAccount.toLowerCase()); // Check if the logged-in user is admin
 
-          // Fetch the total number of predictions and convert it to a string
-          const totalPredictionsBigNumber =
-            await contractInstance.getTotalPredictions();
-          const totalPredictions = totalPredictionsBigNumber.toString();
-          setNumberOfPredictions(totalPredictions);
-
           checkIfWinner(userAccount); // Check if the logged-in user is a winner
+
+          // Check the chain ID to see if it's the Mode network (chain ID 919)
+          const chainId = await window.ethereum.request({
+            method: "eth_chainId",
+          });
+          if (chainId === "0x397") {
+            // "0x397" corresponds to the Mode network (chain ID 919)
+            setIsModeNetwork(true);
+
+            // Fetch the total number of predictions and convert it to a string
+            const totalPredictionsBigNumber =
+              await contractInstance.getTotalPredictions();
+            const totalPredictions = totalPredictionsBigNumber.toString();
+            setNumberOfPredictions(totalPredictions);
+          }
         } catch (error) {
           console.error("Error during initialization:", error);
         }
@@ -140,15 +150,49 @@ function App() {
     }
   };
 
+  const fetchSfsTokenId = async () => {
+    try {
+      const tokenId = await contract.sfsTokenId();
+      console.log("tokenId from contract:", tokenId); // Log tokenId
+      setSfsTokenId(tokenId);
+    } catch (error) {
+      console.error("Error fetching SFS Token ID:", error);
+    }
+  };
+
   const checkContractRegistration = async () => {
     try {
+      await fetchSfsTokenId(); // Call the function to fetch the token ID
       const [isRegistered, balanceBlock] =
         await contract.checkRegistrationAndBalanceBlock();
+      console.log("tokenId from contract:", sfsTokenId); // Log tokenId
       setIsContractRegistered(isRegistered);
       setShowRegistrationStatus(true);
-      // Optionally, you can also handle balanceBlock if needed
     } catch (error) {
       console.error("Error checking contract registration:", error);
+    }
+  };
+
+  const resetGame = async () => {
+    if (!contract) {
+      console.error("Contract not initialized.");
+      return;
+    }
+    try {
+      // Check if the current user is the admin
+      const adminAddress = await contract.admin();
+      const userAddress = await contract.signer.getAddress();
+      if (userAddress !== adminAddress) {
+        console.error("Only the admin can reset the game.");
+        return;
+      }
+      // Send the transaction to reset the game
+      const tx = await contract.resetGame();
+      await tx.wait(); // Wait for the transaction to be mined
+      console.log("Game reset successfully!");
+      alert("The game has been reset!");
+    } catch (error) {
+      console.error("Error resetting the game:", error);
     }
   };
 
@@ -170,7 +214,9 @@ function App() {
             )}
             {showRegistrationStatus && (
               <p>
-                {isContractRegistered ? "Yes! Woohoo! TokenID:" : "No :( wtf"}
+                {isContractRegistered
+                  ? `Yes! Woohoo! TokenID:#${sfsTokenId}`
+                  : "No :( wtf"}
               </p>
             )}
           </div>
@@ -191,6 +237,10 @@ function App() {
               onChange={(e) => setSfsFeeAmount(e.target.value)}
             />
             <button onClick={claimSFSFees}>Send Fees to Contract</button>
+          </div>
+
+          <div className="admin-item">
+            <button onClick={resetGame}>RESET GAME</button>
           </div>
         </section>
       )}
@@ -219,15 +269,24 @@ function App() {
       <div className="wallet-address">
         {account && (
           <p>
-            Connected: {account.substring(0, 4)}...
+            Address: {account.substring(0, 4)}...
             {account.substring(account.length - 5)}
           </p>
+        )}
+        {isModeNetwork ? (
+          <p>Connected to: MODE TESTNET</p>
+        ) : (
+          <p>Please change your network to Mode!</p>
         )}
       </div>
       <div className="gamble-box">
         <header className="app-header">
           <h1 className="app-title">Gumbledapp</h1>
-          <CountdownTimer />
+
+          <div className="countdown-timer">
+            <CountdownTimer />
+            <p>Predictions Count: {numberOfPredictions}</p>
+          </div>
         </header>
 
         <main className="main-content">
@@ -239,7 +298,7 @@ function App() {
                 value={prediction}
                 onChange={(e) => setPrediction(e.target.value)}
                 className="prediction-input"
-                placeholder={`Predict MILADY floor price on NYE | Predictions so far: ${numberOfPredictions}`}
+                placeholder={`Predict the MILADY floor price on NYE (whole number) `}
               />
               <button
                 onClick={submitPrediction}
@@ -280,7 +339,6 @@ function App() {
           You can submit as many times as you like, *just costs gas.
         </div>
       </div>
-      <p>Total Predictions Count: {numberOfPredictions}</p>
     </div>
   );
 }
