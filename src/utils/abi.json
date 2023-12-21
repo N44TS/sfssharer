@@ -1,6 +1,12 @@
 [
 	{
 		"anonymous": false,
+		"inputs": [],
+		"name": "GameReset",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
 		"inputs": [
 			{
 				"indexed": true,
@@ -91,6 +97,13 @@
 			}
 		],
 		"name": "claimSFSFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "resetGame",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -189,6 +202,19 @@
 				"internalType": "contract IFeeSharing",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getTotalPredictions",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

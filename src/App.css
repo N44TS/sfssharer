@@ -152,6 +152,19 @@ input[type=number] {
   transform: scale(0.95); 
 }
 
+.spinner {
+  width: 24px; /* Adjust the size as needed */
+  height: 24px; /* Adjust the size as needed */
+  animation: spin 1s linear infinite;
+  margin-right: 8px; /* Adjust as needed */
+}
+
+/* Animation keyframes for spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .winner-section {
   color: #FFD700; 
   padding: 1rem;

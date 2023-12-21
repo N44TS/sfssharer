@@ -4,24 +4,22 @@ import abi from "./utils/abi.json";
 import "./App.css";
 import CountdownTimer from "./CountdownTimer";
 
-const contractAddress = "0x459d998241FA8C9FC71fbeed228c3CA4c4e2a055";
+const contractAddress = "0xfd3D4834e9496ba3239Eff1FF1Be4Bca8a320d55";
 
 function App() {
   const [contract, setContract] = useState(null);
   const [account, setAccount] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [prediction, setPrediction] = useState("");
+  const [numberOfPredictions, setNumberOfPredictions] = useState(0);
   const [winningNumber, setWinningNumber] = useState("");
   const [sfsFeeAmount, setSfsFeeAmount] = useState("");
   const [isWinner, setIsWinner] = useState(false);
   const [showRegistrationStatus, setShowRegistrationStatus] = useState(false);
   const [isContractRegistered, setIsContractRegistered] = useState(null);
   const [showWinningAnimation, setShowWinningAnimation] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    days: "00",
-    hours: "00",
-    minutes: "00",
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false); // Add state to track submission status
+  const [hasSubmitted, setHasSubmitted] = useState(false); // Track if the user has submitted once
 
   // Temporary variable for development (set to 'true' to simulate being a winner)
   // const [isTempWinner, setIsTempWinner] = useState(false); // Change to true to test winner view
@@ -39,6 +37,7 @@ function App() {
 
         setContract(contractInstance);
 
+        // Inside the init function, after setting the contract instance
         try {
           const userAccount = await signer.getAddress();
           setAccount(userAccount);
@@ -47,6 +46,13 @@ function App() {
           );
           const adminAddress = await contractInstance.admin();
           setIsAdmin(adminAddress.toLowerCase() === userAccount.toLowerCase()); // Check if the logged-in user is admin
+
+          // Fetch the total number of predictions and convert it to a string
+          const totalPredictionsBigNumber =
+            await contractInstance.getTotalPredictions();
+          const totalPredictions = totalPredictionsBigNumber.toString();
+          setNumberOfPredictions(totalPredictions);
+
           checkIfWinner(userAccount); // Check if the logged-in user is a winner
         } catch (error) {
           console.error("Error during initialization:", error);
@@ -58,7 +64,7 @@ function App() {
 
     init();
     checkIfWinner();
-  }, [account, contract]); // Depend on account and contract
+  }, [account, contract]);
 
   const checkIfWinner = async () => {
     if (contract && account) {
@@ -84,12 +90,19 @@ function App() {
   };
 
   const submitPrediction = async () => {
-    if (!prediction) return;
+    if (!prediction || isSubmitting || hasSubmitted) return; // Prevent multiple submissions
+
     try {
+      setIsSubmitting(true); // Disable the button
       await contract.submitPrediction(prediction);
       console.log(`Prediction ${prediction} submitted`);
+      setIsSubmitting(false); // Enable the button after the transaction is confirmed
+      setHasSubmitted(true); // Mark that the user has submitted
+      setShowWinningAnimation(true); // Trigger the animation
+      window.alert("Prediction received!");
     } catch (error) {
       console.error("Error submitting prediction:", error);
+      setIsSubmitting(false); // Enable the button in case of an error
     }
   };
 
@@ -156,7 +169,9 @@ function App() {
               </button>
             )}
             {showRegistrationStatus && (
-              <p>{isContractRegistered ? "Yes! Woohoo" : "No :( wtf"}</p>
+              <p>
+                {isContractRegistered ? "Yes! Woohoo! TokenID:" : "No :( wtf"}
+              </p>
             )}
           </div>
           <div className="admin-item">
@@ -197,6 +212,10 @@ function App() {
         <div className="winning-animation"></div>
       )}
 
+      {/* 
+      ///////////////////////////// 
+      ////////MAIN CONTENT///////////
+     ///////////////////////////// */}
       <div className="wallet-address">
         {account && (
           <p>
@@ -220,17 +239,28 @@ function App() {
                 value={prediction}
                 onChange={(e) => setPrediction(e.target.value)}
                 className="prediction-input"
-                placeholder="predict MILADY floor price on nye"
+                placeholder={`Predict MILADY floor price on NYE | Predictions so far: ${numberOfPredictions}`}
               />
-              <button onClick={submitPrediction} className="submit-button">
-                Submit
+              <button
+                onClick={submitPrediction}
+                className={hasSubmitted ? "submitted-button" : "submit-button"}
+                disabled={isSubmitting} // Disable the button while submitting
+              >
+                {isSubmitting ? (
+                  <span className="spinner" role="img" aria-label="spinner">
+                    Submitting... 🐸
+                  </span>
+                ) : hasSubmitted ? (
+                  "Submitted"
+                ) : (
+                  "Submit"
+                )}
               </button>
             </div>
             {/* *pay gas only */}
           </div>
         </main>
       </div>
-
       <div className="rules-section">
         <div className="rules">
           <h3 className="rules-title">
@@ -250,6 +280,7 @@ function App() {
           You can submit as many times as you like, *just costs gas.
         </div>
       </div>
+      <p>Total Predictions Count: {numberOfPredictions}</p>
     </div>
   );
 }
