@@ -234,7 +234,15 @@ function App() {
       <div className="rules-section">
         <div className="rules">
           <h3 className="rules-title">
-            <span style={{ color: "#FF2E63", fontSize: "1.2em" }}>Rules:</span>{" "}
+            <span
+              style={{
+                color: "#FF2E63",
+                fontSize: "1.2em",
+                textShadow: "0 0 10px #FF2E63",
+              }}
+            >
+              Rules:
+            </span>{" "}
             closest to actual price after two weeks wins a share of the contract
             fees(SFS)! . The more people interact with this contract, the more
             Eth to be won!
