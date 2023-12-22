@@ -1,3 +1,5 @@
+/* global BigInt */
+
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "./utils/abi.json";
@@ -5,8 +7,8 @@ import "./App.css";
 import CountdownTimer from "./CountdownTimer";
 import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
 
-const contractAddress = "0x2a67FF22A2a53BD9F5381759b8Ec719dd0e8fbeE"; //usually would be in .env but here for hackathon so can be checked on chain
-const theQuestion = `Predict the MILADY floor price on NYE (in whole $USD) `;
+const contractAddress = "0xD228cE3E08937f7D0A1869e4C694FBf3Bf78f66f"; //usually would be in .env but here for hackathon so can be checked on chain
+const theQuestion = `Predict the MILADY floor price on NYE (in whole $USD) `; //easy to change the questoin up here
 
 function App() {
   const [contract, setContract] = useState(null);
@@ -25,6 +27,14 @@ function App() {
   const [sfsTokenId, setSfsTokenId] = useState(null);
   const [isModeNetwork, setIsModeNetwork] = useState(false);
   const [predictionCount, setPredictionCount] = useState(0);
+  const [latestPredictions, setLatestPredictions] = useState([]);
+  const [votingOptions, setVotingOptions] = useState([
+    "Prediction 1",
+    "Prediction 2",
+    "Prediction 3",
+    "Prediction 4",
+    "Submit Your Own",
+  ]);
 
   // // Temporary variable for development (set to 'true' to simulate being a winner)
   // const [isTempWinner, setIsTempWinner] = useState(true); // Change to true to test winner view
@@ -70,6 +80,8 @@ function App() {
         } catch (error) {
           console.error("Error during initialization:", error);
         }
+        // Fetch latest predictions to put in table
+        fetchLatestPredictions();
       } else {
         console.error("Ethereum object not found, install MetaMask.");
       }
@@ -110,8 +122,7 @@ function App() {
       await contract.submitPrediction(prediction);
       console.log(`Prediction ${prediction} submitted`);
       setIsSubmitting(false);
-
-      // Allow for immediate subsequent submissions by resetting the 'hasSubmitted' state
+      // Allow for immediate subsequent submissions
       setHasSubmitted(false);
 
       setShowWinningAnimation(true);
@@ -130,6 +141,29 @@ function App() {
       if (error.message.includes("Admin cannot submit predictions")) {
         window.alert("🚫Admin cannot submit predictions, go away!🚫");
       }
+    }
+  };
+
+  const fetchLatestPredictions = async () => {
+    if (!contract) return;
+
+    try {
+      const totalPredictionsResponse = await contract.getTotalPredictions();
+      const totalPredictions = BigInt(totalPredictionsResponse);
+
+      const latestPredictionsArray = [];
+
+      // Calculate the start index, ensuring it's not negative
+      const startIndex = totalPredictions > 5 ? totalPredictions - 5 : 0;
+
+      for (let i = startIndex; i < totalPredictions; i++) {
+        const prediction = await contract.predictions(i.toString()); // Assuming contract.predictions takes a string
+        latestPredictionsArray.push(prediction);
+      }
+
+      setLatestPredictions(latestPredictionsArray.reverse());
+    } catch (error) {
+      console.error("Error in fetchLatestPredictions:", error);
     }
   };
 
@@ -283,19 +317,22 @@ function App() {
       ///////////////////////////// 
       ////////MAIN CONTENT///////////
      ///////////////////////////// */}
-      <div className="wallet-address">
-        {account && (
-          <p>
-            Address: {account.substring(0, 4)}...
-            {account.substring(account.length - 5)}
-          </p>
-        )}
-        {isModeNetwork ? (
-          <p>Connected to: MODE TESTNET</p>
-        ) : (
-          <p>Please change your network to Mode!</p>
-        )}
-      </div>
+      <section className="address-stay">
+        <div className="wallet-address">
+          {account && (
+            <p>
+              Address: {account.substring(0, 4)}...
+              {account.substring(account.length - 5)}
+            </p>
+          )}
+          {isModeNetwork ? (
+            <p>Connected to: MODE TESTNET</p>
+          ) : (
+            <p>Please change your network to Mode!</p>
+          )}
+        </div>
+      </section>
+
       <div className="gamble-box">
         <header className="app-header">
           <h1 className="app-title">Gumbledapp</h1>
@@ -352,6 +389,35 @@ function App() {
           </h3>
           You can submit as many times as you like, *just costs gas.
         </div>
+      </div>
+      <div className="prediction-box-container">
+        <div className="prediction-box latest-predictions">
+          <h3>Live Latest Predictions</h3>
+          <ul>
+            {latestPredictions.map((prediction, index) => (
+              <li key={index}>
+                Address:{" "}
+                {`${prediction.predictor.substring(
+                  0,
+                  5
+                )}...${prediction.predictor.substring(
+                  prediction.predictor.length - 4
+                )}`}{" "}
+                -- Predicted Number: {prediction.predictedNumber.toString()}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* // i'll figure out voting functionality after hackathon cos there's no time */}
+        {/* <div className="prediction-box voting-box">
+          <h4>Coming soon...</h4>
+          <h3>Vote for the Next Prediction</h3>
+          <ul>
+            {votingOptions.map((option, index) => (
+              <li key={index}>{option}</li>
+            ))}
+          </ul>
+        </div> */}
       </div>
     </div>
   );

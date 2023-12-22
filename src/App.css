@@ -41,6 +41,7 @@ input[type=number] {
   font-size: 0.9rem;
 }
 
+
 .countdown-timer {
   color: #21e6c1; /* Neon cyan */
   font-size: 1.2rem;
@@ -315,6 +316,105 @@ input[type=number] {
   color: #FF2E63; 
 }
 
+
+
+.prediction-box-container {
+  display: flex;
+  justify-content: space-between; /* Space evenly between the two boxes */
+  margin: 20px auto;
+  max-width: 1024px; /* Adjust max-width as needed */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.prediction-box {
+  padding: 20px;
+  border-radius: 8px;
+  width: 48%; /* leave some space between the boxes */
+  box-sizing: border-box;
+}
+
+.latest-predictions {
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px auto; /* Center the table */
+  max-width: 500px; /* Constrain the width */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.latest-predictions h3 {
+  color: #00ffea; /* Neon cyan */
+  text-shadow: 0 0 10px #00ffea; /* Glowing effect */
+  font-size: 1.5em;
+  text-align: center; /* Center the title */
+  margin-bottom: 15px;
+}
+
+.latest-predictions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.latest-predictions li {
+  background-color: #121212; /* Slightly lighter dark */
+  color: #f0f0f0; /* Light text */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border-left: 5px solid #ff2079; /* Neon pink border */
+  font-family: 'Courier New', monospace; /* Monospaced font for a techy feel */
+  box-shadow: 0 0 5px rgba(255, 32, 121, 0.5); /* Subtle glow */
+  word-break: break-all; /* Ensure long text doesn't overflow */
+}
+
+.latest-predictions li:last-child {
+  margin-bottom: 0;
+}
+
+.prediction-box {
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 520px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.prediction-box h3 {
+  color: #00ffea;
+  text-shadow: 0 0 10px #00ffea;
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.prediction-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.prediction-box li {
+  background-color: #121212;
+  color: #f0f0f0;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border-left: 5px solid #ff2079;
+  font-family: 'Courier New', monospace;
+  box-shadow: 0 0 5px rgba(255, 32, 121, 0.5);
+  word-break: break-all;
+}
+
+.prediction-box li:last-child {
+  margin-bottom: 0;
+}
+
+
+/* MEDIA SIZES */
+
 /* Responsive Media Queries */
 @media (max-width: 667px) {
   .countdown-timer {
@@ -326,10 +426,9 @@ input[type=number] {
   }
 
   .app-title {
-    font-size: 2.5rem; /* Adjust as needed */
+    font-size: 2.5rem; 
   }
 }
-
 
 @media (max-width: 768px) {
   .main-content {
@@ -351,7 +450,7 @@ input[type=number] {
 @media (min-width: 768px) {
   /* Adjust layout for larger devices if necessary */
   .main-content {
-    flex-direction: row; /* Row on larger devices if you want side by side */
+    flex-direction: row; /* Row on larger devices if wanting side by side */
     justify-content: space-between;
   }
 
