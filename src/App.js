@@ -6,6 +6,7 @@ import CountdownTimer from "./CountdownTimer";
 import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
 
 const contractAddress = "0x2a67FF22A2a53BD9F5381759b8Ec719dd0e8fbeE";
+const theQuestion = `what whole number will admin choose for demo? `;
 
 function App() {
   const [contract, setContract] = useState(null);
@@ -308,7 +309,7 @@ function App() {
                 value={prediction}
                 onChange={(e) => setPrediction(e.target.value)}
                 className="prediction-input"
-                placeholder={`Predict the MILADY floor price on NYE (in whole $USD) `}
+                placeholder={theQuestion} // Set the placeholder to the value of theQuestion cos its easier to change
               />
               <button
                 onClick={submitPrediction}
