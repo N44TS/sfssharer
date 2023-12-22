@@ -23,8 +23,8 @@ function App() {
   const [sfsTokenId, setSfsTokenId] = useState(null);
   const [isModeNetwork, setIsModeNetwork] = useState(false);
 
-  // Temporary variable for development (set to 'true' to simulate being a winner)
-  // const [isTempWinner, setIsTempWinner] = useState(false); // Change to true to test winner view
+  // // Temporary variable for development (set to 'true' to simulate being a winner)
+  // const [isTempWinner, setIsTempWinner] = useState(true); // Change to true to test winner view
 
   useEffect(() => {
     const init = async () => {
@@ -89,7 +89,6 @@ function App() {
     }
   };
 
-  //need to know if its admin so can authorise all the hidden stuff
   const checkIfAdmin = async (userAccount) => {
     try {
       const adminAddress = await contract.admin(); // Use contract directly
@@ -184,7 +183,7 @@ function App() {
     try {
       // Check if the current user is the admin
       const adminAddress = await contract.admin();
-      const userAddress = await contract.signer.getAddress();
+      const userAddress = account; // Use the 'account' state variable
       if (userAddress !== adminAddress) {
         console.error("Only the admin can reset the game.");
         return;
@@ -248,8 +247,6 @@ function App() {
         </section>
       )}
 
-      {/* Temporary!!! button to toggle winner status when devving
-      <button onClick={toggleWinnerStatus}>Toggle Winner Status (Dev)</button> */}
       {isWinner && (
         <div className="winning-animation">
           <div className="winning-message">
@@ -260,9 +257,6 @@ function App() {
             </button>
           </div>
         </div>
-      )}
-      {isWinner && showWinningAnimation && (
-        <div className="winning-animation"></div>
       )}
 
       {/* 
