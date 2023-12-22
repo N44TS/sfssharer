@@ -384,7 +384,8 @@ function App() {
               Rules:
             </span>{" "}
             closest to actual price after two weeks wins a share of the contract
-            fees(SFS)! The more people interact with this contract, the more Eth
+            fees(via SFS)! 
+            The more people interact with this contract, the more Eth
             to be won!
           </h3>
           You can submit as many times as you like, *just costs gas.
