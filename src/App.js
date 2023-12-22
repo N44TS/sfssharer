@@ -5,7 +5,7 @@ import "./App.css";
 import CountdownTimer from "./CountdownTimer";
 import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
 
-const contractAddress = "0xfd3D4834e9496ba3239Eff1FF1Be4Bca8a320d55";
+const contractAddress = "0x2a67FF22A2a53BD9F5381759b8Ec719dd0e8fbeE";
 
 function App() {
   const [contract, setContract] = useState(null);
@@ -117,6 +117,11 @@ function App() {
     } catch (error) {
       console.error("Error submitting prediction:", error);
       setIsSubmitting(false);
+
+      // Check if the error message contains "Admin cannot submit predictions" and show admin they cant submit
+      if (error.message.includes("Admin cannot submit predictions")) {
+        window.alert("🚫Admin cannot submit predictions, go away!🚫");
+      }
     }
   };
 

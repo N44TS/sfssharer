@@ -250,8 +250,13 @@ input[type=number] {
   transition: background-color 0.3s;
 }
 
+.admin-panel button:active {
+  transform: scale(0.95); 
+  background-color: #e0e0e0b7;
+}
+
 .admin-panel button:hover {
-  background-color: #e0e0e0;
+  background-color: #e0e0e0b7;
 }
 
 
