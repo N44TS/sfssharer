@@ -1,8 +1,8 @@
-# 🐸 Gumbledapp – Mode Degen Hackathon Submission
+# 🐸  Gumbledapp – Mode Degen Hackathon Submission
 
-Welcome to Gumbledapp, a decentralized prediction-based game built on the Mode network, designed to leverage the Sequencer Fee Sharing (SFS) mechanism. Gumbledapp allows users to make predictions on specific events, submitting predictions and competing for a chance to win a share of the sequencer fees collected by the contract. 
+Welcome to Gumbledapp, a decentralized prediction-based game built on the Mode network, made to leverage the Sequencer Fee Sharing (SFS) mechanism. Gumbledapp allows users to make predictions on specific events, submitting predictions and competing for a chance to win a share of the sequencer fees collected by the contract. 
 
-For this hackathon I tried to utilise SFS creatively, looking for ways the concept could be used in a fun way. This dApp offers an engaging and potentially rewarding way for users to engage with the SFS mechanism and test their prediction skills
+For this hackathon I tried to utilise SFS creatively, looking for ways the concept could be used in a fun way. This dApp offers an engaging and potentially rewarding way for users to engage with the SFS mechanism and test their prediction skills.
 
 Live Demo: [Gumbledapp Testnet](https://sfssharer.vercel.app/)
 
@@ -26,7 +26,7 @@ For the best experience view on web, the application is currently not optimized 
 
 - **Funding Source / Sequencer Fee Sharing**: The prize money comes directly from the fees collected by the contract itself. The contract is registered in the Fee Sharing Contract, which means that with every interaction, it earns a share of the network's Sequencer fees. These fees accumulate over time, as users submit their predictions and interact with the contract, making the prize pool more attractive as more users participate.
 
-- **Contract Balance**: The fees eventually end up in the smart contract's balance after executing the "Claim SFS Fee" function. This function is responsible for withdrawing accumulated fees from the Fee Sharing System (SFS) and transferring them to Gumbledapps smart contract.
+- **Contract Balance**: The fees eventually end up in the smart contract's balance after executing the "Claim SFS Fee" function. This function is responsible for withdrawing accumulated fees from the Fee Sharing System (SFS) and transferring them to Gumbledapps smart contract. [Read more about it here](#in-depth-with-the-claim-sfs-fee-function)
 
 - **Prize Allocation**: The smart contract is responsible for determining winners and distributing prizes. Winners are determined based on who predicts a number closest to a specific value. This means that winning is not based on random choice but also skill and prediction accuracy.
 
@@ -89,12 +89,12 @@ Gumbledapp provides an exciting way to interact with the Mode network, so have f
 
 The "Claim SFS Fee" function in the contract serves as a mechanism for withdrawing accumulated fees from the Fee Sharing System (SFS). Here's how it works:
 
-1. **Trigger Fee Withdrawal**: When this function is called, it triggers a request to the Fee Sharing Contract to withdraw a specified amount of fees. These fees represent the portion that has been accumulated as a result of transactions involving this smart contract.
+**Trigger Fee Withdrawal**: When this function is called, it triggers a request to the Fee Sharing Contract to withdraw a specified amount of fees. These fees represent the portion that has been accumulated as a result of transactions involving this smart contract.
 
-2. **Interaction with the Fee Sharing Contract**: The Gumbledapp contract communicates with the Fee Sharing Contract by calling its withdraw function. This interaction is facilitated through the interface IFeeSharing, which the Gumbledapps contract uses to interact with the Fee Sharing Contract.
+**Interaction with the Fee Sharing Contract**: The Gumbledapp contract communicates with the Fee Sharing Contract by calling its withdraw function. This interaction is facilitated through the interface IFeeSharing, which the Gumbledapps contract uses to interact with the Fee Sharing Contract.
 
-3. **Specifying Amount and Recipient**: In the function call, it's specified the amount of fees to be withdrawn and the recipient's address. The recipient is hard-coded to be the smart contract itself (address(this)), meaning that the withdrawn fees are transferred to the smart contract's balance immediately.
+**Specifying Amount and Recipient**: In the function call, it's specified the amount of fees to be withdrawn and the recipient's address. The recipient is hard-coded to be the smart contract itself (address(this)), meaning that the withdrawn fees are transferred to the smart contract's balance immediately.
 
-4. **Role of Admin**: Only the admin wallet address can call this function. This is to prevent unauthorized withdrawals from the Fee Sharing System.
+**Role of Admin**: Only the admin wallet address can call this function. This is to prevent unauthorized withdrawals from the Fee Sharing System.
 
-5. **Post-Withdrawal Actions**: After the fees are successfully withdrawn to the contract, they remain in the contract's balance. The contract manages these funds, including distributing them to winners.
+**Post-Withdrawal Actions**: After the fees are successfully withdrawn to the contract, they remain in the contract's balance. The contract manages these funds, including distributing them to winners.
