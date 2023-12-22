@@ -301,6 +301,14 @@ input[type=number] {
   box-shadow: 0 0 10px #c0c0c0;
 }
 
+.claim-button:hover {
+  background-color: #a0a0a0; 
+}
+
+.claim-button:active {
+  transform: scale(0.95);
+  color: #FF2E63; 
+}
 
 /* Responsive Media Queries */
 @media (max-width: 667px) {

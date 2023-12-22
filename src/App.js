@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import abi from "./utils/abi.json";
 import "./App.css";
 import CountdownTimer from "./CountdownTimer";
+import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
 
 const contractAddress = "0xfd3D4834e9496ba3239Eff1FF1Be4Bca8a320d55";
 
@@ -100,19 +101,22 @@ function App() {
   };
 
   const submitPrediction = async () => {
-    if (!prediction || isSubmitting || hasSubmitted) return; // Prevent multiple submissions when metamaks is being slow
+    if (!prediction || isSubmitting || hasSubmitted) return;
 
     try {
-      setIsSubmitting(true); // Disable the button
+      setIsSubmitting(true);
       await contract.submitPrediction(prediction);
       console.log(`Prediction ${prediction} submitted`);
-      setIsSubmitting(false); // Enable the button after the transaction is confirmed
-      setHasSubmitted(true); // Mark that the user has submitted
-      setShowWinningAnimation(true); // Trigger the animation
-      window.alert("Prediction received!");
+      setIsSubmitting(false);
+      setHasSubmitted(true);
+      setShowWinningAnimation(true);
+      window.alert(`Prediction ${prediction} submitted. Good luck!`);
+
+      // Reset the input field and button after successful submission
+      setPrediction(""); // Clear the input field
     } catch (error) {
       console.error("Error submitting prediction:", error);
-      setIsSubmitting(false); // Enable the button in case of an error
+      setIsSubmitting(false);
     }
   };
 
@@ -299,15 +303,13 @@ function App() {
               />
               <button
                 onClick={submitPrediction}
-                className={hasSubmitted ? "submitted-button" : "submit-button"}
-                disabled={isSubmitting} // Disable the button while submitting
+                className="submit-button"
+                disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <span className="spinner" role="img" aria-label="spinner">
                     Submitting... 🐸
                   </span>
-                ) : hasSubmitted ? (
-                  "Submitted"
                 ) : (
                   "Submit"
                 )}
