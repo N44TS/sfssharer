@@ -1,6 +1,6 @@
 # 🐸  Gumbledapp – Mode Degen Hackathon Submission
 
-Welcome to Gumbledapp, a decentralized prediction-based game built on the Mode network, made to leverage the Sequencer Fee Sharing (SFS) mechanism. Gumbledapp allows users to make predictions on specific events, submitting predictions and competing for a chance to win a share of the sequencer fees collected by the contract. 
+A decentralized prediction-based game built on the Mode network, made to leverage the Sequencer Fee Sharing (SFS) mechanism. Gumbledapp allows users to make predictions on specific events, submitting predictions and competing for a chance to win a share of the sequencer fees collected by the contract. 
 
 For this hackathon I tried to utilise SFS creatively, looking for ways the concept could be used in a fun way. This dApp offers an engaging and potentially rewarding way for users to engage with the SFS mechanism and test their prediction skills.
 
