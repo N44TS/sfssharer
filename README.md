@@ -64,6 +64,10 @@ Before getting started with Gumbledapp, make sure you have the following prerequ
 
 This project is licensed under the MIT License.
 
+## Credits
+Gumbledapp was created by me, @N44TS. Hello. 
+
+
 ## FAQs
 
 **How are predictions processed?**
