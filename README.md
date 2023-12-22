@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+# 🐸  Gumbledapp – Mode Degen Hackathon Submission
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A decentralized prediction-based game built on the Mode network, made to leverage the Sequencer Fee Sharing (SFS) mechanism. Gumbledapp allows users to make predictions on specific events, submitting predictions and competing for a chance to win a share of the sequencer fees collected by the contract. 
 
-## Available Scripts
+For this hackathon I tried to utilise SFS creatively, looking for ways the concept could be used in a fun way. This dApp offers an engaging and potentially rewarding way for users to engage with the SFS mechanism and test their prediction skills.
 
-In the project directory, you can run:
+Live Demo: [Gumbledapp Testnet](https://sfssharer.vercel.app/)
 
-### `npm start`
+For the best experience view on web, the application is currently not optimized for mobile devices.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Table of Contents
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- [Introduction](#-gumbledapp--mode-degen-hackathon-submission)
+- [Features Summary](#features-summary)
+- [Usage](#usage)
+- [Prerequisites](#prerequisites)
+- [License](#license)
+- [FAQs](#faqs)
+- [Conclusion](#conclusion)
+- [In-depth with the "Claim SFS Fee" Function](#in-depth-with-the-claim-sfs-fee-function)
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features Summary
 
-### `npm run build`
+- **Decentralized Predictions**: Users can submit predictions for a specified event or outcome (e.g., the floor price of an NFT collection by a specific date) by interacting with the smart contract, paying only gas fees.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Funding Source / Sequencer Fee Sharing**: The prize money comes directly from the fees collected by the contract itself. The contract is registered in the Fee Sharing Contract, which means that with every interaction, it earns a share of the network's Sequencer fees. These fees accumulate over time, as users submit their predictions and interact with the contract, making the prize pool more attractive as more users participate.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Contract Balance**: The fees eventually end up in the smart contract's balance after executing the "Claim SFS Fee" function. This function is responsible for withdrawing accumulated fees from the Fee Sharing System (SFS) and transferring them to Gumbledapps smart contract. [Read more about it here](#in-depth-with-the-claim-sfs-fee-function)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Prize Allocation**: The smart contract is responsible for determining winners and distributing prizes. Winners are determined based on who predicts a number closest to a specific value. This means that winning is not based on random choice but also skill and prediction accuracy.
 
-### `npm run eject`
+- **Prize Distribution**: The DApp automatically distributes prizes to the top three participants with predictions closest to the actual outcome. The prizes consist of a share (currently 50%, 30%, 20%) of the fees collected from the Sequencer Fee Sharing (SFS) mechanism over the past two weeks. Currently, the admin has the responsibility to manually claim these fees to the contract.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Claiming Rewards**: The contract automatically identifies the winners and communicates with the frontend to enable them to claim their share of the fees with just a click of a button.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Admin Panel**: Provides the capability to check whether the contract is registered with SFS, for those who are concerned about contract registration. It also allows for setting the result (oracle integration planned as the next step), resetting the game, and claiming SFS fees. Note that the admin must click a button that pays out directly to the contract (see above). There is no way for the admin to personally receive the fees.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Countdown Timer**: The DApp features a countdown timer that adds an element of excitement and anticipation to the game.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Submission Counter**: Keep track of the number of predictions submitted.
 
-## Learn More
+- **Wallet and Network Info**: Display wallet and network information.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
 
-### Code Splitting
+1. Navigate to the prediction section and enter your prediction for the specified event.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. Click the "Submit" button to submit your prediction. This will open MetaMask for transaction approval. Pay a small gas fee to interact with the contract and save your prediction.
 
-### Analyzing the Bundle Size
+3. If your prediction is among the top three closest to the actual outcome, you'll be notified as a winner. Simply click the "Claim Reward" button to receive your prize.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4. Admin Panel: Accessible only by the contract creator.
 
-### Making a Progressive Web App
+## Prerequisites
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Before getting started with Gumbledapp, make sure you have the following prerequisites:
 
-### Advanced Configuration
+- MetaMask installed in your browser.
+- An Ethereum wallet with some Sequila Ether bridged to Mode on the Mode testnet for interacting with the DApp. Refer to the documentation [here](https://www.mode.network/) for more instructions and how to do it.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## License
 
-### Deployment
+This project is licensed under the MIT License.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Credits
+Gumbledapp was created by me, @N44TS. Hello. 
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## FAQs
+
+**How are predictions processed?**
+
+Predictions are processed by Gumbledapp's smart contract. The contract calculates the difference between each prediction and the actual outcome. The three closest predictions receive rewards from the prize pool.
+
+**Can I submit multiple predictions?**
+
+Yes, you can submit multiple predictions for the same event. Each prediction is treated as a separate entry.
+
+**How often are rewards distributed?**
+
+Rewards are distributed automatically to winners when a new winning number is set by the admin. Typically, rewards are distributed shortly after the event's outcome is known and after the SFS rewards have been confirmed and transferred to the contract.
+
+## Conclusion
+
+Gumbledapp represents a creative application of the SFS mechanism, eventually creating a unique system where the game and the smart contract work seamlessly together, forming a self-sustaining cycle of interactions. It offers users a unique and engaging experience. 
+
+Gumbledapp provides an exciting way to interact with the Mode network, so have fun, make predictions, win rewards!
+
+
+## In-depth with the "Claim SFS Fee" Function
+
+The "Claim SFS Fee" function in the contract serves as a mechanism for withdrawing accumulated fees from the Fee Sharing System (SFS). Here's how it works:
+
+**Trigger Fee Withdrawal**: When this function is called, it triggers a request to the Fee Sharing Contract to withdraw a specified amount of fees. These fees represent the portion that has been accumulated as a result of transactions involving this smart contract.
+
+**Interaction with the Fee Sharing Contract**: The Gumbledapp contract communicates with the Fee Sharing Contract by calling its withdraw function. This interaction is facilitated through the interface IFeeSharing, which the Gumbledapps contract uses to interact with the Fee Sharing Contract.
+
+**Specifying Amount and Recipient**: In the function call, it's specified the amount of fees to be withdrawn and the recipient's address. The recipient is hard-coded to be the smart contract itself (address(this)), meaning that the withdrawn fees are transferred to the smart contract's balance immediately.
+
+**Role of Admin**: Only the admin wallet address can call this function. This is to prevent unauthorized withdrawals from the Fee Sharing System.
+
+**Post-Withdrawal Actions**: After the fees are successfully withdrawn to the contract, they remain in the contract's balance. The contract manages these funds, including distributing them to winners.
