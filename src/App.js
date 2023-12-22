@@ -50,7 +50,7 @@ function App() {
 
           checkIfWinner(userAccount); // Check if the logged-in user is a winner
 
-          // Check the chain ID to see if it's the Mode network (chain ID 919)
+          // Check the chain ID to see if it's the Mode network
           const chainId = await window.ethereum.request({
             method: "eth_chainId",
           });
@@ -89,6 +89,7 @@ function App() {
     }
   };
 
+  //need to know if its admin so can authorise all the hidden stuff
   const checkIfAdmin = async (userAccount) => {
     try {
       const adminAddress = await contract.admin(); // Use contract directly
@@ -100,7 +101,7 @@ function App() {
   };
 
   const submitPrediction = async () => {
-    if (!prediction || isSubmitting || hasSubmitted) return; // Prevent multiple submissions
+    if (!prediction || isSubmitting || hasSubmitted) return; // Prevent multiple submissions when metamaks is being slow
 
     try {
       setIsSubmitting(true); // Disable the button
@@ -116,6 +117,7 @@ function App() {
     }
   };
 
+  //unction for winner to be able to get their prize
   const claimReward = async () => {
     try {
       await contract.claimReward();
@@ -126,6 +128,7 @@ function App() {
     }
   };
 
+  //function only admin can see, to set the winning number
   const setWinningNum = async () => {
     if (!winningNumber) return;
     try {
@@ -291,14 +294,14 @@ function App() {
 
         <main className="main-content">
           <div className="prediction-section">
-            <h2 className="section-title">This Week's Gumble</h2>
+            <h2 className="section-title">This Weeks Gumble</h2>
             <div className="prediction-input-wrapper">
               <input
                 type="number"
                 value={prediction}
                 onChange={(e) => setPrediction(e.target.value)}
                 className="prediction-input"
-                placeholder={`Predict the MILADY floor price on NYE (whole number) `}
+                placeholder={`Predict the MILADY floor price on NYE (in whole $USD) `}
               />
               <button
                 onClick={submitPrediction}
@@ -316,7 +319,6 @@ function App() {
                 )}
               </button>
             </div>
-            {/* *pay gas only */}
           </div>
         </main>
       </div>
@@ -333,8 +335,8 @@ function App() {
               Rules:
             </span>{" "}
             closest to actual price after two weeks wins a share of the contract
-            fees(SFS)! . The more people interact with this contract, the more
-            Eth to be won!
+            fees(SFS)! The more people interact with this contract, the more Eth
+            to be won!
           </h3>
           You can submit as many times as you like, *just costs gas.
         </div>

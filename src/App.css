@@ -211,7 +211,7 @@ input[type=number] {
 
 /* Admin Panel Styling */
 .admin-panel {
-  background-color: rgba(150, 149, 149, 0.852);
+  background-color: rgba(130, 129, 129, 0.912);
   padding: 0.5rem;
   width: 100%;
   max-width: 560px;
@@ -229,7 +229,7 @@ input[type=number] {
 }
 
 .admin-item p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #FF2E63; 
   padding: 4px;
   margin-right: 10px; /* Space between input and button */
