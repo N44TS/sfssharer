@@ -23,6 +23,7 @@ function App() {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [sfsTokenId, setSfsTokenId] = useState(null);
   const [isModeNetwork, setIsModeNetwork] = useState(false);
+  const [predictionCount, setPredictionCount] = useState(0);
 
   // // Temporary variable for development (set to 'true' to simulate being a winner)
   // const [isTempWinner, setIsTempWinner] = useState(true); // Change to true to test winner view
@@ -114,6 +115,9 @@ function App() {
 
       // Reset the input field and button after successful submission
       setPrediction(""); // Clear the input field
+
+      // Increment the prediction count locally JUST FOR NOW cos useeffect kills my cpu
+      setPredictionCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error("Error submitting prediction:", error);
       setIsSubmitting(false);

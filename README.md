@@ -10,14 +10,16 @@ For the best experience view on web, the application is currently not optimized 
 
 ## Table of Contents
 
-- [Introduction](#-gumbledapp--mode-degen-hackathon-submission)
-- [Features Summary](#features-summary)
-- [Usage](#usage)
-- [Prerequisites](#prerequisites)
-- [License](#license)
-- [FAQs](#faqs)
-- [Conclusion](#conclusion)
-- [In-depth with the "Claim SFS Fee" Function](#in-depth-with-the-claim-sfs-fee-function)
+- [🐸  Gumbledapp – Mode Degen Hackathon Submission](#--gumbledapp--mode-degen-hackathon-submission)
+  - [Table of Contents](#table-of-contents)
+  - [Features Summary](#features-summary)
+  - [Usage](#usage)
+  - [Prerequisites](#prerequisites)
+  - [License](#license)
+  - [Credits](#credits)
+  - [FAQs](#faqs)
+  - [Conclusion](#conclusion)
+  - [In-depth with the "Claim SFS Fee" Function](#in-depth-with-the-claim-sfs-fee-function)
 
 
 ## Features Summary
@@ -30,11 +32,15 @@ For the best experience view on web, the application is currently not optimized 
 
 - **Prize Allocation**: The smart contract is responsible for determining winners and distributing prizes. Winners are determined based on who predicts a number closest to a specific value. This means that winning is not based on random choice but also skill and prediction accuracy.
 
-- **Prize Distribution**: The DApp automatically distributes prizes to the top three participants with predictions closest to the actual outcome. The prizes consist of a share (currently 50%, 30%, 20%) of the fees collected from the Sequencer Fee Sharing (SFS) mechanism over the past two weeks. Currently, the admin has the responsibility to manually claim these fees to the contract.
+- **Prize Distribution**: The DApp automatically distributes prizes to the top three participants with predictions closest to the actual outcome. The prizes consist of a share (currently 50%, 30%, 20%) of the fees collected from the Sequencer Fee Sharing (SFS) mechanism over the past two weeks. Currently, the admin has the responsibility to manually claim these fees to the contract (see admin panel below for more info)
 
 - **Claiming Rewards**: The contract automatically identifies the winners and communicates with the frontend to enable them to claim their share of the fees with just a click of a button.
 
-- **Admin Panel**: Provides the capability to check whether the contract is registered with SFS, for those who are concerned about contract registration. It also allows for setting the result (oracle integration planned as the next step), resetting the game, and claiming SFS fees. Note that the admin must click a button that pays out directly to the contract (see above). There is no way for the admin to personally receive the fees.
+- **Admin Panel**: 
+- Provides the capability to check whether the contract is registered with SFS. 
+- Allows for setting the result (oracle integration planned as the next step)
+- Reset the game button; this function clears the predictions array and resets the winningNumber. It also clears the winnerPosition mapping for all addresses that have made predictions
+- Claim SFS fees. Note that the admin must click a button that pays out directly to the contract (see above). Its hard coded in the contract that only the contract address is payable from this function, there is no way for the admin to personally receive the fees.
 
 - **Countdown Timer**: The DApp features a countdown timer that adds an element of excitement and anticipation to the game.
 
