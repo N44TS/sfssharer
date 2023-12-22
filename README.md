@@ -10,7 +10,6 @@ For the best experience view on web, the application is currently not optimized 
 
 ## Table of Contents
 
-- [🐸  Gumbledapp – Mode Degen Hackathon Submission](#--gumbledapp--mode-degen-hackathon-submission)
   - [Table of Contents](#table-of-contents)
   - [Features Summary](#features-summary)
   - [Usage](#usage)
@@ -47,6 +46,8 @@ For the best experience view on web, the application is currently not optimized 
 - **Submission Counter**: Keep track of the number of predictions submitted.
 
 - **Wallet and Network Info**: Display wallet and network information.
+
+- **Live latest predictions board**: a bit of fun, see what other people are thining, adds some competitivness. 
 
 
 ## Usage
