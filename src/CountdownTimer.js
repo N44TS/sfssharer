@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 function CountdownTimer() {
   const calculateTimeLeft = () => {
-    const targetDate = new Date("2023-12-22T15:55:00Z");
+    const targetDate = new Date("2023-12-31T23:59:00Z");
     const timeDifference = targetDate - new Date();
 
     if (timeDifference <= 0) {
@@ -39,7 +39,7 @@ function CountdownTimer() {
 
   return (
     <div>
-      <p>Time left to play</p>
+      <p>Time left to play:</p>
       <span className="timer-days">{timeLeft.days}</span>d:
       <span className="timer-hours">{timeLeft.hours}</span>h:
       <span className="timer-minutes">{timeLeft.minutes}</span>m:

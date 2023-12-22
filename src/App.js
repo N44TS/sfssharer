@@ -5,8 +5,8 @@ import "./App.css";
 import CountdownTimer from "./CountdownTimer";
 import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
 
-const contractAddress = "0x2a67FF22A2a53BD9F5381759b8Ec719dd0e8fbeE";
-const theQuestion = `what whole number will admin choose for demo? `;
+const contractAddress = "0x2a67FF22A2a53BD9F5381759b8Ec719dd0e8fbeE"; //usually would be in .env but here for hackathon so can be checked on chain
+const theQuestion = `Predict the MILADY floor price on NYE (in whole $USD) `;
 
 function App() {
   const [contract, setContract] = useState(null);
@@ -103,14 +103,17 @@ function App() {
   };
 
   const submitPrediction = async () => {
-    if (!prediction || isSubmitting || hasSubmitted) return;
+    if (!prediction || isSubmitting) return;
 
     try {
       setIsSubmitting(true);
       await contract.submitPrediction(prediction);
       console.log(`Prediction ${prediction} submitted`);
       setIsSubmitting(false);
-      setHasSubmitted(true);
+
+      // Allow for immediate subsequent submissions by resetting the 'hasSubmitted' state
+      setHasSubmitted(false);
+
       setShowWinningAnimation(true);
       window.alert(`Prediction ${prediction} submitted. Good luck!`);
 
@@ -147,6 +150,9 @@ function App() {
     try {
       await contract.setWinningNumber(winningNumber);
       console.log(`Winning number set to ${winningNumber}`);
+
+      // Reset the winning number state after successful transaction
+      setWinningNumber("");
     } catch (error) {
       console.error("Error setting winning number:", error);
     }
