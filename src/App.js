@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 import abi from "./utils/abi.json";
 import "./App.css";
 import CountdownTimer from "./CountdownTimer";
-import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
 
 const contractAddress = "0xD228cE3E08937f7D0A1869e4C694FBf3Bf78f66f"; //usually would be in .env but here for hackathon so can be checked on chain
 const theQuestion = `Predict the MILADY floor price on NYE (in whole $USD) `; //easy to change the questoin up here
@@ -31,8 +30,6 @@ function App() {
   const [votingOptions, setVotingOptions] = useState([
     "Prediction 1",
     "Prediction 2",
-    "Prediction 3",
-    "Prediction 4",
     "Submit Your Own",
   ]);
 
@@ -328,7 +325,7 @@ function App() {
           {isModeNetwork ? (
             <p>Connected to: MODE TESTNET</p>
           ) : (
-            <p>Please change your network to Mode!</p>
+            <p>Please change your network to Mode Testnet!</p>
           )}
         </div>
       </section>
