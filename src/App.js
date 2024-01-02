@@ -7,7 +7,7 @@ import "./App.css";
 import CountdownTimer from "./CountdownTimer";
 
 const contractAddress = "0xD228cE3E08937f7D0A1869e4C694FBf3Bf78f66f"; //usually would be in .env but here for hackathon so can be checked on chain
-const theQuestion = `Predict the MILADY floor price when hackathon ends (in whole $USD) `; //easy to change the questoin up here
+const theQuestion = `Predict MILADY floor price when hackathon ends (whole $USD) `; //easy to change the questoin up here
 
 function App() {
   const [contract, setContract] = useState(null);
