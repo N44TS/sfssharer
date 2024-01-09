@@ -7,7 +7,7 @@ import "./App.css";
 import CountdownTimer from "./CountdownTimer";
 
 const contractAddress = "0xD228cE3E08937f7D0A1869e4C694FBf3Bf78f66f"; //usually would be in .env but here for hackathon so can be checked on chain
-const theQuestion = `Predict MILADY floor price when hackathon ends (whole $USD) `; //easy to change the questoin up here
+const theQuestion = `Predict MILADY MAKER floor price (whole $USD) `; //easy to change the questoin up here
 
 function App() {
   const [contract, setContract] = useState(null);
@@ -380,10 +380,9 @@ function App() {
             >
               Rules:
             </span>{" "}
-            closest to actual price after two weeks wins a share of the contract
-            fees(via SFS)! 
-            The more people interact with this contract, the more Eth
-            to be won!
+            closest to actual price when the countdowntimer runs down wins a
+            share of the contract fees(via SFS)! The more people interact with
+            this contract, the more Eth to be won!
           </h3>
           You can submit as many times as you like, *just costs gas.
         </div>
