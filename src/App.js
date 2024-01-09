@@ -1,10 +1,12 @@
-/* global BigInt */
-
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "./utils/abi.json";
 import "./App.css";
 import CountdownTimer from "./CountdownTimer";
+import {
+  fetchPredictions,
+  fetchLatestPredictionsModeTestnet,
+} from "./ModeTestnetEndpoint";
 
 const contractAddress = "0xD228cE3E08937f7D0A1869e4C694FBf3Bf78f66f"; //usually would be in .env but here for hackathon so can be checked on chain
 const theQuestion = `Predict MILADY MAKER floor price (whole $USD) `; //easy to change the questoin up here
@@ -25,7 +27,6 @@ function App() {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [sfsTokenId, setSfsTokenId] = useState(null);
   const [isModeNetwork, setIsModeNetwork] = useState(false);
-  const [predictionCount, setPredictionCount] = useState(0);
   const [latestPredictions, setLatestPredictions] = useState([]);
   const [votingOptions, setVotingOptions] = useState([
     "Prediction 1",
@@ -39,48 +40,45 @@ function App() {
   useEffect(() => {
     const init = async () => {
       if (window.ethereum) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contractInstance = new ethers.Contract(
-          contractAddress,
-          abi,
-          signer
-        );
-
-        setContract(contractInstance);
-
         try {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          const contractInstance = new ethers.Contract(
+            contractAddress,
+            abi,
+            signer
+          );
+
+          setContract(contractInstance);
           const userAccount = await signer.getAddress();
           setAccount(userAccount);
           console.log(
             "Hey babes, come here often?... looks around the console...passes you a red wine..."
           );
-          const adminAddress = await contractInstance.admin();
-          setIsAdmin(adminAddress.toLowerCase() === userAccount.toLowerCase()); // Check if the logged-in user is admin
 
-          checkIfWinner(userAccount); // Check if the logged-in user is a winner
+          const adminAddress = await contractInstance.admin();
+          setIsAdmin(adminAddress.toLowerCase() === userAccount.toLowerCase());
+          console.log("Are you admin?:", isAdmin);
+
+          // Check if the logged-in user is a winner
+          checkIfWinner(userAccount);
 
           // Check the chain ID to see if it's the Mode network
           const chainId = await window.ethereum.request({
             method: "eth_chainId",
           });
-          if (chainId === "0x397") {
-            // "0x397" corresponds to the Mode network (chain ID 919)
-            setIsModeNetwork(true);
-
-            // Fetch the total number of predictions and convert it to a string
-            const totalPredictionsBigNumber =
-              await contractInstance.getTotalPredictions();
-            const totalPredictions = totalPredictionsBigNumber.toString();
-            setNumberOfPredictions(totalPredictions);
-          }
+          setIsModeNetwork(chainId === "0x397"); // "0x397" corresponds to the Mode network (chain ID 919)
         } catch (error) {
-          console.error("Error during initialization:", error);
+          console.error(
+            "Error during Ethereum provider initialization:",
+            error
+          );
         }
-        // Fetch latest predictions to put in table
-        fetchLatestPredictions();
       } else {
-        console.error("Ethereum object not found, install MetaMask.");
+        console.log(
+          "Ethereum provider not found. You can view the data but cannot interact. PLs login to Metamask"
+        );
+        // fetchData();
       }
     };
 
@@ -129,7 +127,7 @@ function App() {
       setPrediction(""); // Clear the input field
 
       // Increment the prediction count locally JUST FOR NOW cos useeffect kills my cpu
-      setPredictionCount((prevCount) => prevCount + 1);
+      setNumberOfPredictions((prevCount) => Number(prevCount) + 1);
     } catch (error) {
       console.error("Error submitting prediction:", error);
       setIsSubmitting(false);
@@ -141,30 +139,21 @@ function App() {
     }
   };
 
-  const fetchLatestPredictions = async () => {
-    if (!contract) return;
+  // Fetch the total number of predictions and convert it to a string to show on ALL networks cos of modetestnetendpoint
+  // fetch latest predictions for the live table
+  useEffect(() => {
+    const fetchData = async () => {
+      const predictionsCount = await fetchPredictions();
+      setNumberOfPredictions(predictionsCount);
 
-    try {
-      const totalPredictionsResponse = await contract.getTotalPredictions();
-      const totalPredictions = BigInt(totalPredictionsResponse);
+      const latestPredictionsData = await fetchLatestPredictionsModeTestnet();
+      setLatestPredictions(latestPredictionsData);
+    };
 
-      const latestPredictionsArray = [];
+    fetchData();
+  }, []);
 
-      // Calculate the start index, ensuring it's not negative
-      const startIndex = totalPredictions > 5 ? totalPredictions - 5 : 0;
-
-      for (let i = startIndex; i < totalPredictions; i++) {
-        const prediction = await contract.predictions(i.toString()); // Assuming contract.predictions takes a string
-        latestPredictionsArray.push(prediction);
-      }
-
-      setLatestPredictions(latestPredictionsArray.reverse());
-    } catch (error) {
-      console.error("Error in fetchLatestPredictions:", error);
-    }
-  };
-
-  //unction for winner to be able to get their prize
+  //function for winner to be able to get their prize
   const claimReward = async () => {
     try {
       await contract.claimReward();
