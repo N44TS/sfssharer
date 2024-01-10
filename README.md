@@ -36,19 +36,19 @@ For the best experience view on web, the application is currently not optimized 
 
 - **Claiming Rewards**: The contract automatically identifies the winners and communicates with the frontend to enable them to claim their share of the fees with just a click of a button.
 
-  **Admin Panel**: 
-- Provides the capability to check whether the contract is registered with SFS. 
-- Allows for setting the result (oracle integration planned as the next step)
-- Reset the game button; this function clears the predictions array and resets the winningNumber. It also clears the winnerPosition mapping for all addresses that have made predictions
-- Claim SFS fees. Note that the admin must click a button that pays out directly to the contract (see above). Its hard coded in the contract that only the contract address is payable from this function, there is no way for the admin to personally receive the fees.
-
 - **Countdown Timer**: The DApp features a countdown timer that adds an element of excitement and anticipation to the game.
 
 - **Submission Counter**: Keep track of the number of predictions submitted.
 
 - **Wallet and Network Info**: Display wallet and network information.
 
-- **Live latest predictions board**: a bit of fun, see what other people are thinking and predicting, adds some competitivness. 
+- **Live latest predictions board**: a bit of fun, see what other people are thinking and predicting, adds some competitivness.
+
+  **Admin Panel**: 
+- Provides the capability to check whether the contract is registered with SFS. 
+- Allows for setting the result (oracle integration planned as the next step)
+- Reset the game button; this function clears the predictions array and resets the winningNumber. It also clears the winnerPosition mapping for all addresses that have made predictions
+- Claim SFS fees. Note that the admin must click a button that pays out directly to the contract (see above). Its hard coded in the contract that only the contract address is payable from this function, there is no way for the admin to personally receive the fees.
 
 
 ## Usage
