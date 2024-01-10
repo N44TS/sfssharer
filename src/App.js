@@ -7,6 +7,7 @@ import {
   fetchPredictions,
   fetchLatestPredictionsModeTestnet,
 } from "./ModeTestnetEndpoint";
+import LatestPredictionsTable from "./LiveLatestPredictions";
 
 const contractAddress = "0xD228cE3E08937f7D0A1869e4C694FBf3Bf78f66f"; //usually would be in .env but here for hackathon so can be checked on chain
 const theQuestion = `Predict MILADY MAKER floor price (whole $USD) `; //easy to change the questoin up here
@@ -303,21 +304,19 @@ function App() {
       ///////////////////////////// 
       ////////MAIN CONTENT///////////
      ///////////////////////////// */}
-      <section className="address-stay">
-        <div className="wallet-address">
-          {account && (
-            <p>
-              Address: {account.substring(0, 4)}...
-              {account.substring(account.length - 5)}
-            </p>
-          )}
-          {isModeNetwork ? (
-            <p>Connected to: MODE TESTNET</p>
-          ) : (
-            <p>Please change your network to Mode Testnet!</p>
-          )}
-        </div>
-      </section>
+      <div className="wallet-address">
+        {account && (
+          <p>
+            Address: {account.substring(0, 4)}...
+            {account.substring(account.length - 5)}
+          </p>
+        )}
+        {isModeNetwork ? (
+          <p>Connected to: MODE TESTNET</p>
+        ) : (
+          <p>Please change your network to Mode Testnet!</p>
+        )}
+      </div>
 
       <div className="gamble-box">
         <header className="app-header">
@@ -377,23 +376,7 @@ function App() {
         </div>
       </div>
       <div className="prediction-box-container">
-        <div className="prediction-box latest-predictions">
-          <h3>Live Latest Predictions</h3>
-          <ul>
-            {latestPredictions.map((prediction, index) => (
-              <li key={index}>
-                Address:{" "}
-                {`${prediction.predictor.substring(
-                  0,
-                  5
-                )}...${prediction.predictor.substring(
-                  prediction.predictor.length - 4
-                )}`}{" "}
-                -- Predicted Number: {prediction.predictedNumber.toString()}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <LatestPredictionsTable predictions={latestPredictions} />
         {/* // i'll figure out voting functionality after hackathon cos there's no time */}
         {/* <div className="prediction-box voting-box">
           <h4>Coming soon...</h4>

@@ -10,6 +10,7 @@ For the best experience view on web, the application is currently not optimized 
 
 ## Table of Contents
 
+- [🐸  Gumbledapp – Mode Degen Hackathon Submission](#--gumbledapp--mode-degen-hackathon-submission)
   - [Table of Contents](#table-of-contents)
   - [Features Summary](#features-summary)
   - [Usage](#usage)
@@ -35,7 +36,7 @@ For the best experience view on web, the application is currently not optimized 
 
 - **Claiming Rewards**: The contract automatically identifies the winners and communicates with the frontend to enable them to claim their share of the fees with just a click of a button.
 
-- **Admin Panel**: 
+  **Admin Panel**: 
 - Provides the capability to check whether the contract is registered with SFS. 
 - Allows for setting the result (oracle integration planned as the next step)
 - Reset the game button; this function clears the predictions array and resets the winningNumber. It also clears the winnerPosition mapping for all addresses that have made predictions
@@ -47,10 +48,11 @@ For the best experience view on web, the application is currently not optimized 
 
 - **Wallet and Network Info**: Display wallet and network information.
 
-- **Live latest predictions board**: a bit of fun, see what other people are thining, adds some competitivness. 
+- **Live latest predictions board**: a bit of fun, see what other people are thinking and predicting, adds some competitivness. 
 
 
 ## Usage
+*Please make sure you are connected to the Mode testnet in order to submit.* 
 
 1. Navigate to the prediction section and enter your prediction for the specified event.
 

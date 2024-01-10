@@ -31,6 +31,7 @@ input[type=number] {
 .app-container {
   min-height: 100vh;
   padding: 2rem;
+  position: relative;
 }
 
 .wallet-address {
@@ -40,7 +41,6 @@ input[type=number] {
   color: #fffc2e;
   font-size: 0.9rem;
 }
-
 
 .countdown-timer {
   color: #21e6c1; /* Neon cyan */
