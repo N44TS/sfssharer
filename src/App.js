@@ -8,14 +8,17 @@ import {
   fetchLatestPredictionsModeTestnet,
 } from "./ModeTestnetEndpoint";
 import LatestPredictionsTable from "./LiveLatestPredictions";
+import AdminPanel from "./AdminPanel";
 
-const contractAddress = "0xD228cE3E08937f7D0A1869e4C694FBf3Bf78f66f"; //usually would be in .env but here for hackathon so can be checked on chain
+const contractAddress = "0xf62De52838695EdC6B075Bf33CFF7f960f3f9034"; //usually would be in .env but here for hackathon so can be checked on chain
 const theQuestion = `Predict MILADY MAKER floor price (whole $USD) `; //easy to change the questoin up here
 
 function App() {
   const [contract, setContract] = useState(null);
   const [account, setAccount] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [sfsBalance, setSfsBalance] = useState(null);
+  const [contractBalance, setContractBalance] = useState(null);
   const [prediction, setPrediction] = useState("");
   const [numberOfPredictions, setNumberOfPredictions] = useState(0);
   const [winningNumber, setWinningNumber] = useState("");
@@ -203,16 +206,45 @@ function App() {
     }
   };
 
+  //ADMIN BOARD BITS
   const checkContractRegistration = async () => {
     try {
-      await fetchSfsTokenId(); // Call the function to fetch the token ID
-      const [isRegistered, balanceBlock] =
-        await contract.checkRegistrationAndBalanceBlock();
-      console.log("tokenId from contract:", sfsTokenId); // Log tokenId
+      await fetchSfsTokenId(); // Fetch the token ID
+      const isRegistered = await contract.checkRegistration();
       setIsContractRegistered(isRegistered);
       setShowRegistrationStatus(true);
     } catch (error) {
       console.error("Error checking contract registration:", error);
+    }
+  };
+
+  const fetchSfsBalance = async () => {
+    if (!contract) return;
+    try {
+      const balance = await contract.checkSFSBalance();
+      setSfsBalance(balance.toString());
+    } catch (error) {
+      console.error("Error fetching SFS balance:", error);
+    }
+  };
+
+  const fetchContractBalance = async () => {
+    if (!contract) return;
+    try {
+      const contractBalance = await contract.checkContractBalance();
+      setContractBalance(contractBalance.toString());
+    } catch (error) {
+      console.error("Error fetching contract balance:", error);
+    }
+  };
+
+  const transferNftBackToAdmin = async () => {
+    if (!contract || !sfsTokenId) return;
+    try {
+      await contract.returnNftToAdmin(sfsTokenId);
+      console.log(`NFT with token ID ${sfsTokenId} returned to admin`);
+    } catch (error) {
+      console.error("Error transferring NFT back to admin:", error);
     }
   };
 
@@ -245,48 +277,26 @@ function App() {
   return (
     <div className="app-container">
       {/* Admin panel stuff */}
-      {isAdmin && (
-        <section className="admin-panel">
-          <h2>Admin Panel</h2>
-          <div className="admin-item">
-            <label>Contract Registered?:</label>
-            {!showRegistrationStatus && (
-              <button onClick={checkContractRegistration}>
-                Click to Check
-              </button>
-            )}
-            {showRegistrationStatus && (
-              <p>
-                {isContractRegistered
-                  ? `Yes! Woohoo! TokenID:#${sfsTokenId}`
-                  : "No :( wtf"}
-              </p>
-            )}
-          </div>
-          <div className="admin-item">
-            <label>Set Winning Number:</label>
-            <input
-              type="number"
-              value={winningNumber}
-              onChange={(e) => setWinningNumber(e.target.value)}
-            />
-            <button onClick={setWinningNum}>Submit Winning Number</button>
-          </div>
-          <div className="admin-item">
-            <label>Claim SFS Fees:</label>
-            <input
-              type="number"
-              value={sfsFeeAmount}
-              onChange={(e) => setSfsFeeAmount(e.target.value)}
-            />
-            <button onClick={claimSFSFees}>Send Fees to Contract</button>
-          </div>
-
-          <div className="admin-item">
-            <button onClick={resetGame}>RESET GAME</button>
-          </div>
-        </section>
-      )}
+      <AdminPanel
+        isAdmin={isAdmin}
+        showRegistrationStatus={showRegistrationStatus}
+        isContractRegistered={isContractRegistered}
+        sfsTokenId={sfsTokenId}
+        checkContractRegistration={checkContractRegistration}
+        sfsBalance={sfsBalance}
+        fetchSfsBalance={fetchSfsBalance}
+        winningNumber={winningNumber}
+        setWinningNumber={setWinningNumber}
+        setWinningNum={setWinningNum}
+        sfsFeeAmount={sfsFeeAmount}
+        setSfsFeeAmount={setSfsFeeAmount}
+        claimSFSFees={claimSFSFees}
+        fetchContractBalance={fetchContractBalance}
+        contractBalance={contractBalance}
+        transferNftBackToAdmin={transferNftBackToAdmin}
+        resetGame={resetGame}
+        // ... other props you might need ...
+      />
 
       {isWinner && (
         <div className="winning-animation">
