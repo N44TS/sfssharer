@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "./utils/abi.json";
 import "./App.css";
-import CountdownTimer from "./CountdownTimer";
 import {
   fetchPredictions,
   fetchLatestPredictionsModeTestnet,
 } from "./ModeTestnetEndpoint";
-import LatestPredictionsTable from "./LiveLatestPredictions";
-import AdminPanel from "./AdminPanel";
+import CountdownTimer from "./components/CountdownTimer";
+import LatestPredictionsTable from "./components/LiveLatestPredictions";
+import AdminPanel from "./components/AdminPanel";
 
 const contractAddress = "0xf62De52838695EdC6B075Bf33CFF7f960f3f9034"; //usually would be in .env but here for hackathon so can be checked on chain
 const theQuestion = `Predict MILADY MAKER floor price (whole $USD) `; //easy to change the questoin up here
@@ -206,7 +206,7 @@ function App() {
     }
   };
 
-  //ADMIN BOARD BITS
+  // MORE ADMIN BOARD BITS
   const checkContractRegistration = async () => {
     try {
       await fetchSfsTokenId(); // Fetch the token ID
@@ -378,9 +378,9 @@ function App() {
             >
               Rules:
             </span>{" "}
-            closest to actual price when the countdowntimer runs down wins a
-            share of the contract fees(via SFS)! The more people interact with
-            this contract, the more Eth to be won!
+            the closest prediction to the actual price when the countdowntimer
+            runs down wins a share of the contract fees(via SFS)! The more
+            people interact with this contract, the more Eth to be won!
           </h3>
           You can submit as many times as you like, *just costs gas.
         </div>
