@@ -39,7 +39,8 @@
     ]
   },
   "resolutions": {
-    "ws": "7.5.10"
+    "ws": "7.5.10",
+    "nth-check": "2.0.1"
   },
   "devDependencies": {
     "npm-force-resolutions": "^0.0.10"
